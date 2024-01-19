@@ -108,12 +108,12 @@ public class ProductDao implements Dao<Integer, Product> {
     }
 
     @Override
-    public boolean delete(Integer id) {
+    public void delete(Integer id) {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(DELETE)) {
             preparedStatement.setInt(1, id);
 
-            return preparedStatement.executeUpdate() > 0;
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
