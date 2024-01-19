@@ -13,6 +13,8 @@ public class Product {
     private Integer id;
     private String name;
     private Integer price;
+    private ProductType productType;
+    private ProductStatus productStatus;
 
     public Product() {
     }
@@ -21,10 +23,12 @@ public class Product {
         this.id = id;
     }
 
-    public Product(Integer id, String name, Integer price) {
+    public Product(Integer id, String name, Integer price, ProductType productType, ProductStatus productStatus) {
         this.id = id;
         this.name = name;
         this.price = price;
+        this.productType = productType;
+        this.productStatus = productStatus;
     }
 }
 

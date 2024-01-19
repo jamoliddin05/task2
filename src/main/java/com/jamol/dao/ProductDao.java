@@ -1,6 +1,8 @@
 package com.jamol.dao;
 
 import com.jamol.model.Product;
+import com.jamol.model.ProductStatus;
+import com.jamol.model.ProductType;
 import com.jamol.util.ConnectionManager;
 
 import java.sql.*;
@@ -22,14 +24,16 @@ public class ProductDao implements Dao<Integer, Product> {
             """;
 
     private static final String SAVE = """
-            INSERT INTO product (name, price)
-            VALUES (?, ?)
+            INSERT INTO product (name, price, product_type, product_status)
+            VALUES (?, ?, ?, ?)
             """;
 
     private static final String UPDATE = """
             UPDATE product
             SET name = ?,
-                price = ?
+                price = ?,
+                product_type = ?,
+                product_status = ?
             WHERE id = ?
             """;
 
@@ -80,6 +84,8 @@ public class ProductDao implements Dao<Integer, Product> {
              var preparedStatement = connection.prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, product.getName());
             preparedStatement.setInt(2, product.getPrice());
+            preparedStatement.setInt(3, ProductType.CASHED_VALUES.indexOf(product.getProductType()) + 1);
+            preparedStatement.setInt(4, ProductStatus.CASHED_VALUES.indexOf(product.getProductStatus()) + 1);
 
             preparedStatement.executeUpdate();
 
@@ -100,7 +106,10 @@ public class ProductDao implements Dao<Integer, Product> {
              var preparedStatement = connection.prepareStatement(UPDATE)) {
             preparedStatement.setString(1, product.getName());
             preparedStatement.setInt(2, product.getPrice());
-            preparedStatement.setInt(3, product.getId());
+            preparedStatement.setInt(3, ProductType.CASHED_VALUES.indexOf(product.getProductType()) + 1);
+            preparedStatement.setInt(4, ProductStatus.CASHED_VALUES.indexOf(product.getProductStatus()) + 1);
+            preparedStatement.setInt(5, product.getId());
+
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -123,7 +132,9 @@ public class ProductDao implements Dao<Integer, Product> {
         return new Product(
                 resultSet.getObject("id", Integer.class),
                 resultSet.getObject("name", String.class),
-                resultSet.getObject("price", Integer.class)
+                resultSet.getObject("price", Integer.class),
+                ProductType.CASHED_VALUES.get(resultSet.getObject("product_type", Integer.class) - 1),
+                ProductStatus.CASHED_VALUES.get(resultSet.getObject("product_status", Integer.class) - 1)
         );
     }
 

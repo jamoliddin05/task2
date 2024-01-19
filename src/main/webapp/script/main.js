@@ -17,6 +17,8 @@ Vue.component('product-form', {
         return {
             name: '',
             price: '',
+            productType: '',
+            productStatus: '',
             id: ''
         }
     },
@@ -25,16 +27,34 @@ Vue.component('product-form', {
             this.id = newVal.id;
             this.name = newVal.name;
             this.price = newVal.price;
+            this.productType = newVal.productType;
+            this.productStatus = newVal.productStatus;
         }
     },
     template: '<div>' +
         '<input type="text" placeholder="Product name" v-model="name"/><br>' +
         '<input type="text" placeholder="Product price" v-model="price"/><br>' +
+        '<label for="productType">Product Type:</label>' +
+        '<select id="productType" v-model="productType">' +
+        '<option value="LAPTOP">Laptop</option>' +
+        '<option value="PHONE">Phone</option>' +
+        '<option value="TABLET">Tablet</option>' +
+        '</select><br>' +
+        '<label for="productStatus">Product Status:</label>' +
+        '<select id="productStatus" v-model="productStatus">' +
+        '<option value="AVAILABLE">Available</option>' +
+        '<option value="NOT_AVAILABLE">Not available</option>' +
+        '</select><br>' +
         '<input type="button" value="Save" @click="save"/>' +
         '</div>',
     methods: {
         save: function () {
-            let product = {name: this.name, price: this.price};
+            let product = {
+                name: this.name,
+                price: this.price,
+                productType: this.productType,
+                productStatus: this.productStatus,
+            };
 
             if (this.id) {
                 productApi.update({id: this.id}, product).then(result =>
@@ -44,6 +64,8 @@ Vue.component('product-form', {
                         this.name = ''
                         this.price = ''
                         this.id = ''
+                        this.productType = ''
+                        this.productStatus = ''
                     })
                 )
             } else {
@@ -63,7 +85,8 @@ Vue.component('product-form', {
 Vue.component('product-row', {
     props: ['product', 'editMethod', 'products'],
     template: '<div>' +
-        '<i>({{ product.name }})</i> {{ product.price }}' +
+        '<i>({{ product.name }})</i> {{ product.price }}$ ' +
+        '{{ product.productType }} - {{ product.productStatus }}' +
         '<span style="position: absolute; right: 0;">' +
             '<input type="button" value="Edit" @click="edit" />' +
             '<input type="button" value="X" @click="del" />' +
@@ -90,7 +113,7 @@ Vue.component('product-list', {
             product: null
         }
     },
-    template: '<div style="position: relative; width: 300px;">' +
+    template: '<div style="position: relative; width: 400px;">' +
         '<product-form :products="products" :productAttr="product" />' +
         '<product-row v-for="product in products" :key="product.id" :product="product" ' +
         ' :editMethod="editMethod" :products="products"/>' +

@@ -9,6 +9,9 @@ public class ProductService {
     private static final ProductService INSTANCE = new ProductService();
     private static final ProductDao productDao = ProductDao.getInstance();
 
+    private ProductService() {
+    }
+
     public List<Product> findAll() {
         return productDao.findAll();
     }
@@ -27,9 +30,6 @@ public class ProductService {
 
     public void delete(Integer id) {
         productDao.delete(id);
-    }
-
-    private ProductService() {
     }
 
     public static ProductService getInstance() {
