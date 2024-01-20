@@ -24,6 +24,8 @@ public class ProductService {
         var productFromDb = productDao.findById(id).get();
         productFromDb.setName(product.getName());
         productFromDb.setPrice(product.getPrice());
+        productFromDb.setProductType(product.getProductType());
+        productFromDb.setProductStatus(product.getProductStatus());
         productDao.update(productFromDb);
         return productFromDb;
     }

@@ -9,7 +9,7 @@ function getIndex(list, id) {
     return -1;
 }
 
-let productApi = Vue.resource('/service/products/{id}');
+let productApi = Vue.resource('service/products/{id}');
 
 Vue.component('product-form', {
     props: ['products', 'productAttr'],
@@ -32,7 +32,7 @@ Vue.component('product-form', {
         }
     },
     template: '<div>' +
-        '<input type="text" placeholder="Product name" v-model="name"/><br>' +
+        '<input type="text" placeholder="Product name" v-model="name"/>' +
         '<input type="text" placeholder="Product price" v-model="price"/><br>' +
         '<label for="productType">Product Type:</label>' +
         '<select id="productType" v-model="productType">' +
@@ -73,7 +73,7 @@ Vue.component('product-form', {
                     result => result.json().then(
                         data => {
                             this.products.push(data);
-                            this.name = '';
+                            this.name = ''
                             this.price = ''
                         })
                 )
